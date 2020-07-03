@@ -14,9 +14,6 @@ const router: Router = Router();
 
 async function generatePassword(plainTextPassword: string): Promise<string> {
     const saltRound = 10;
-    // console.log(saltRound)
-    // const salt = await bcrypt.genSalt(saltRound)
-    // console.log(salt)
     return await bcrypt.hashSync(plainTextPassword, saltRound)
 }
 
