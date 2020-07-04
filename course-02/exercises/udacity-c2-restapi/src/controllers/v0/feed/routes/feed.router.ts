@@ -16,7 +16,7 @@ router.get("/", async (req: Request, res: Response) => {
     res.send(items);
 });
 
-
+// Get specific feed item
 router.get("/:id", async (req: Request, res: Response) => {
     let { id } = req.params;
     const item = await FeedItem.findByPk(id);
