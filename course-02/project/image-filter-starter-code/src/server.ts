@@ -33,7 +33,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   app.get("/filteredimage", async (req, res) => {
 
-    let { image_url } = req.query;
+    const { image_url } = req.query;
 
     if (!image_url) {
       res.status(400).send({ message: "image_url is required or malformed" });
@@ -41,8 +41,8 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
     }
 
     // create a regex to validate the image_url
-    var expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
-    var regex = new RegExp(expression);
+    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+    const regex = new RegExp(expression);
 
     // validate if the image_url is well formed
     if (!image_url.match(regex)) {
@@ -60,7 +60,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
       return;
     }
 
-    let promiseImage = filterImageFromURL(image_url);
+    const promiseImage = filterImageFromURL(image_url);
 
     promiseImage.then(image => {
       res.sendFile(image, () => {
