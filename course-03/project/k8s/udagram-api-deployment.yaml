@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: udagram-api
+  template:
+    metadata:
+      labels:
+        component: udagram-api
+    spec:
+      containers:
+        - name: udagram-api
+          image: denyslins/udagram-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_USERNAME
+              value: postgres
+            - name: POSTGRES_HOST
+              value: postgres-cluster-ip-service
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DATABASE
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
+            - name: AWS_REGION
+              value: us-east-1
+            - name: AWS_PROFILE
+              value: udagram
+            - name: AWS_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: awsbucket
+                  key: AWS_BUCKET
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: awskey
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: awssecretkey
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwtsecret
+                  key: JWT_SECRET

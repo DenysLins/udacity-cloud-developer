@@ -15,9 +15,5 @@ spec:
       containers:
         - name: udagram-frontend
           image: denyslins/udagram-frontend:latest
-          resources:
-            limits:
-              memory: "256Mi"
-              cpu: "500m"
           ports:
             - containerPort: 8081
