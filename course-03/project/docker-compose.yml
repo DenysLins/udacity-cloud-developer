@@ -7,23 +7,23 @@ services:
       context: ./udagram-api
       dockerfile: Dockerfile
     environment:
-      - POSTGRES_USERNAME=
-      - POSTGRES_HOST=
-      - POSTGRES_DATABASE=
-      - POSTGRES_PASSWORD=
-      - POSTGRES_PORT=
-      - AWS_REGION=
-      - AWS_PROFILE=
-      - AWS_BUCKET=
-      - URL=
-      - JWT_SECRET=
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_PROFILE=${AWS_PROFILE}
+      - AWS_BUCKET=${AWS_BUCKET}
+      - URL=${URL}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - 8080:8080
     tty: true
   postgres:
     image: "postgres:12"
     environment:
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     tty: true
