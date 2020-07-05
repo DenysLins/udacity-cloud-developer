@@ -1,5 +1,12 @@
 version: "3"
 services:
+  postgres:
+    image: "postgres:12"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    tty: true
   udagram-api:
     depends_on:
       - postgres
@@ -12,19 +19,34 @@ services:
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=${POSTGRES_PORT}
-      - UDAGRAM_API_PORT=${UDAGRAM_API_PORT}
       - AWS_REGION=${AWS_REGION}
       - AWS_PROFILE=${AWS_PROFILE}
       - AWS_BUCKET=${AWS_BUCKET}
-      - URL=${URL}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - CORS_ORIGIN=${CORS_ORIGIN}
       - JWT_SECRET=${JWT_SECRET}
     ports:
-      - ${UDAGRAM_API_PORT}:${UDAGRAM_API_PORT}
+      - 8080:8080
     tty: true
-  postgres:
-    image: "postgres:12"
-    environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  udagram-frontend:
+    depends_on:
+      - postgres
+      - udagram-api
+    build:
+      context: ./udagram-frontend
+      dockerfile: Dockerfile
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - 8081:8081
+    tty: true
+  nginx:
+    depends_on:
+      - postgres
+      - udagram-api
+      - udagram-frontend
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
     tty: true
