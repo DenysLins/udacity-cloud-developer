@@ -1,0 +1,35 @@
+language: node_js
+node_js:
+  - 12
+
+services:
+  - docker
+
+# Pre-testing installs
+install:
+  - echo "nothing needs to be installed"
+
+# Scripts to be run such as tests
+before_script:
+  - echo "no tests"
+
+script:
+  - docker --version # print the version for logging
+  - docker build -t udagram-api \
+    --build-arg POSTGRES_USERNAME=${POSTGRES_USERNAME} \
+    --build-arg POSTGRES_HOST=${POSTGRES_HOST} \
+    --build-arg POSTGRES_DATABASE=${POSTGRES_DATABASE} \
+    --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+    --build-arg POSTGRES_PORT=${POSTGRES_PORT} \
+    --build-arg AWS_REGION=${AWS_REGION} \
+    --build-arg AWS_PROFILE=${AWS_PROFILE} \
+    --build-arg AWS_BUCKET=${AWS_BUCKET} \
+    --build-arg URL=${URL} \
+    --build-arg JWT_SECRET=${JWT_SECRET} \
+    ./udagram-api
+  - docker tag udagram-api denyslins/udagram-api:latest
+
+# Tasks to perform after the process is successful. Formatting the Docker username and password as below enables you to programmatically log in without having the password exposed in logs.
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push denyslins/udagram-api
