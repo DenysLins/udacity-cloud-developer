@@ -26,7 +26,7 @@ script:
     --build-arg AWS_BUCKET=${AWS_BUCKET} \
     --build-arg URL=${URL} \
     --build-arg JWT_SECRET=${JWT_SECRET} \
-    ./udagram-api
+    ./course-03/project/udagram-api
   - docker tag udagram-api denyslins/udagram-api:latest
 
 # Tasks to perform after the process is successful. Formatting the Docker username and password as below enables you to programmatically log in without having the password exposed in logs.
