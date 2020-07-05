@@ -24,8 +24,13 @@ script:
   - docker build -t udagram-frontend ./course-03/project/udagram-frontend
   - docker tag udagram-frontend denyslins/udagram-frontend:latest
 
+  # build nginx
+  - docker build -t udagram-nginx ./course-03/project/udagram-nginx
+  - docker tag udagram-nginx denyslins/udagram-nginx:latest
+
 # Tasks to perform after the process is successful. Formatting the Docker username and password as below enables you to programmatically log in without having the password exposed in logs.
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push denyslins/udagram-api
   - docker push denyslins/udagram-frontend
+  - docker push denyslins/udagram-nginx
