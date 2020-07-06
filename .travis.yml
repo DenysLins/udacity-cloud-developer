@@ -16,23 +16,18 @@ before_script:
 script:
   - docker --version # print the version for logging
 
-  - export hash=$(git rev-parse --short HEAD)
+  - export HASH=$(git rev-parse --short HEAD)
 
   # build udagram-api
   - docker build -t udagram-api ./course-03/project/udagram-api
-  - docker tag udagram-api denyslins/udagram-api:hash
+  - docker tag udagram-api denyslins/udagram-api:$HASH
 
   # build udagram-frontend
   - docker build -t udagram-frontend ./course-03/project/udagram-frontend
-  - docker tag udagram-frontend denyslins/udagram-frontend:hash
-
-  # build nginx
-  - docker build -t udagram-nginx ./course-03/project/udagram-nginx
-  - docker tag udagram-nginx denyslins/udagram-nginx:hash
+  - docker tag udagram-frontend denyslins/udagram-frontend:$HASH
 
 # Tasks to perform after the process is successful. Formatting the Docker username and password as below enables you to programmatically log in without having the password exposed in logs.
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push denyslins/udagram-api:hash
-  - docker push denyslins/udagram-frontend:hash
-  - docker push denyslins/udagram-nginx:hash
+  - docker push denyslins/udagram-api:$HASH
+  - docker push denyslins/udagram-frontend:$HASH
