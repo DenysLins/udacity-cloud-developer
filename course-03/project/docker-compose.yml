@@ -7,11 +7,28 @@ services:
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     tty: true
-  udagram-api:
+  udagram-api-user:
     depends_on:
       - postgres
     build:
-      context: ./udagram-api
+      context: ./udagram-api-user
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - 8080:8080
+    tty: true
+  udagram-api-feed:
+    depends_on:
+      - postgres
+    build:
+      context: ./udagram-api-feed
       dockerfile: Dockerfile
     environment:
       - POSTGRES_USERNAME=${POSTGRES_USERNAME}
@@ -27,22 +44,24 @@ services:
       - CORS_ORIGIN=${CORS_ORIGIN}
       - JWT_SECRET=${JWT_SECRET}
     ports:
-      - 8080:8080
+      - 8081:8081
     tty: true
   udagram-frontend:
     depends_on:
       - postgres
-      - udagram-api
+      - udagram-api-feed
+      - udagram-api-user
     build:
       context: ./udagram-frontend
       dockerfile: Dockerfile
     ports:
-      - 8081:8081
+      - 8082:8082
     tty: true
   udagram-nginx:
     depends_on:
       - postgres
-      - udagram-api
+      - udagram-api-feed
+      - udagram-api-user
       - udagram-frontend
     build:
       context: ./udagram-nginx

@@ -16,4 +16,4 @@ spec:
         - name: udagram-frontend
           image: denyslins/udagram-frontend:latest
           ports:
-            - containerPort: 8081
+            - containerPort: 8082

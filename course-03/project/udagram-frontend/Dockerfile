@@ -14,7 +14,7 @@ FROM nginx:alpine
 
 FROM nginx
 
-EXPOSE 8081
+EXPOSE 8082
 
 COPY nginx.conf /etc/nginx/nginx.conf
 

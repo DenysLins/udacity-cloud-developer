@@ -11,8 +11,12 @@ spec:
           - path: /
             backend:
               serviceName: udagram-frontend-cluster-ip-service
-              servicePort: 8081
-          - path: /api
+              servicePort: 8082
+          - path: /api/v0/user
             backend:
-              serviceName: udagram-api-cluster-ip-service
+              serviceName: udagram-api-user-cluster-ip-service
               servicePort: 8080
+          - path: /api/v0/feed
+            backend:
+              serviceName: udagram-api-feed-cluster-ip-service
+              servicePort: 8081
