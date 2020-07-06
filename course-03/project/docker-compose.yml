@@ -1,0 +1,71 @@
+version: "3"
+services:
+  postgres:
+    image: "postgres:12"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    tty: true
+  udagram-api-user:
+    depends_on:
+      - postgres
+    build:
+      context: ./udagram-api-user
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - 8080:8080
+    tty: true
+  udagram-api-feed:
+    depends_on:
+      - postgres
+    build:
+      context: ./udagram-api-feed
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_PROFILE=${AWS_PROFILE}
+      - AWS_BUCKET=${AWS_BUCKET}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - 8081:8081
+    tty: true
+  udagram-frontend:
+    depends_on:
+      - postgres
+      - udagram-api-feed
+      - udagram-api-user
+    build:
+      context: ./udagram-frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    tty: true
+  udagram-nginx:
+    depends_on:
+      - postgres
+      - udagram-api-feed
+      - udagram-api-user
+      - udagram-frontend
+    build:
+      context: ./udagram-nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    tty: true
