@@ -4,16 +4,15 @@ metadata:
   name: nginx-ingress-service
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
     - http:
         paths:
-          - path: /?(.*)
+          - path: /
             backend:
               serviceName: udagram-frontend-cluster-ip-service
               servicePort: 8081
-          - path: /api/?(.*)
+          - path: /api
             backend:
               serviceName: udagram-api-cluster-ip-service
               servicePort: 8080
