@@ -25,6 +25,13 @@ spec:
             - name: postgres-storage
               mountPath: /var/lib/postgressql/data
               subPath: postgres
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "0.25"
+            limits:
+              memory: "512Mi"
+              cpu: "0.5"
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:

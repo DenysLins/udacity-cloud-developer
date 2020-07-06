@@ -14,9 +14,16 @@ spec:
     spec:
       containers:
         - name: udagram-api-feed
-          image: denyslins/udagram-api-feed:latest
+          image: denyslins/udagram-api-feed:e414b53
           ports:
             - containerPort: 8081
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "0.25"
+            limits:
+              memory: "512Mi"
+              cpu: "0.5"
           env:
             - name: POSTGRES_USERNAME
               value: postgres
