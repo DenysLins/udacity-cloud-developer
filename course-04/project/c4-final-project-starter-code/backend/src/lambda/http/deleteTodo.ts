@@ -15,22 +15,20 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   const todoId = event.pathParameters.todoId
 
-  var params = {
+  await docClient.delete({
     TableName: todosTable,
     Key: {
       todoId
     }
-  };
-
-  const result = await docClient.delete(params).promise()
+  }).promise()
 
   return {
-    statusCode: 201,
+    statusCode: 200,
     headers: {
       'Access-Control-Allow-origin': '*'
     },
     body: JSON.stringify({
-      result
+      message: "Success"
     })
   }
 

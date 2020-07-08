@@ -13,5 +13,10 @@
       "type": "boolean"
     }
   },
+  "required": [
+    "name",
+    "dueDate",
+    "done"
+  ],
   "additionalProperties": false
 }
