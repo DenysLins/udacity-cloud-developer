@@ -12,7 +12,7 @@ const todosTable = process.env.TODOS_TABLE
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-  logger.info('createTodos', {
+  logger.info('createTodo', {
     event
   })
 
