@@ -56,6 +56,9 @@ functions:
           method: patch
           path: todos/{todoId}
           cors: true
+          request:
+            schema:
+              application/json: ${file(src/models/update-todo-request.json)}
 
   # TODO: Configure this function
   DeleteTodo:
