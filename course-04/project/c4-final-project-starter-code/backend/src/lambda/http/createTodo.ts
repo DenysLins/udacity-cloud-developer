@@ -10,7 +10,7 @@ import * as utils from '../utils'
 
 const logger = createLogger('todos')
 const docClient = new AWS.DynamoDB.DocumentClient()
-const todosTable = process.env.TODOS_TABLE
+const todoTable = process.env.TODO_TABLE
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
@@ -32,7 +32,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   }
 
   await docClient.put({
-    TableName: todosTable,
+    TableName: todoTable,
     Item: newTodo
   }).promise()
 
