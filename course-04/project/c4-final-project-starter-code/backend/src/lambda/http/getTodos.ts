@@ -18,24 +18,40 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   const userId = utils.getUserId(event)
 
-  const result = await docClient.query({
+  const param = {
     TableName: todoTable,
     IndexName: todoIdIndex,
-    KeyConditionExpression: 'userId = :userId',
+    FilterExpression: 'userId = :userId',
     ExpressionAttributeValues: {
       ':userId': userId
     }
-  }).promise()
-
-  const items = result.Items
-
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-origin': '*'
-    },
-    body: JSON.stringify({
-      items
-    })
   }
+
+  return new Promise((resolve, reject) => {
+    docClient.scan(param, (err, data) => {
+      if (err) {
+        logger.info('err', { err })
+        reject({
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      }
+      logger.info('data', { data })
+      resolve({
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          items: data.Items
+        })
+      })
+    })
+  })
+
 }

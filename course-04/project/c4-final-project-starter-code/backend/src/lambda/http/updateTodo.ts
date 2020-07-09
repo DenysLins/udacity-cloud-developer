@@ -4,6 +4,7 @@ import * as AWS from 'aws-sdk'
 
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { createLogger } from '../../utils/logger'
+import * as utils from '../utils'
 
 const logger = createLogger('todos')
 const docClient = new AWS.DynamoDB.DocumentClient()
@@ -16,29 +17,49 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   })
 
   const todoId = event.pathParameters.todoId
+  const userId = utils.getUserId(event)
   const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
 
-  const result = await docClient.update({
+  const param = {
     TableName: todoTable,
     Key: {
-      todoId
+      "todoId": todoId,
+      "userId": userId
     },
-    UpdateExpression: "set todo.name = :n, todo.dueDate=:dd, todo.done=:d",
+    UpdateExpression: "set #tn = :n, dueDate=:dd, done=:d",
+    ExpressionAttributeNames: { '#tn': 'name' },
     ExpressionAttributeValues: {
       ":n": updatedTodo.name,
       ":dd": updatedTodo.dueDate,
       ":d": updatedTodo.done
-    },
-    ReturnValues: "UPDATED_NEW"
-  }).promise()
-
-  return {
-    statusCode: 201,
-    headers: {
-      'Access-Control-Allow-origin': '*'
-    },
-    body: JSON.stringify({
-      result
-    })
+    }
   }
+
+  return new Promise((resolve, reject) => {
+    docClient.update(param, (err, data) => {
+      if (err) {
+        logger.info('err', { err })
+        reject({
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      }
+      logger.info('data', { data })
+      resolve({
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          message: "todo updated"
+        })
+      })
+    })
+  })
+
 }

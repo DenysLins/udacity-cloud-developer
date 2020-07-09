@@ -3,6 +3,7 @@ import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
 
 import { createLogger } from '../../utils/logger'
+import * as utils from '../utils'
 
 const logger = createLogger('todos')
 const docClient = new AWS.DynamoDB.DocumentClient()
@@ -15,22 +16,40 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   })
 
   const todoId = event.pathParameters.todoId
+  const userId = utils.getUserId(event)
 
-  await docClient.delete({
+  const param = {
     TableName: todoTable,
     Key: {
-      todoId
+      "todoId": todoId,
+      "userId": userId
     }
-  }).promise()
-
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-origin': '*'
-    },
-    body: JSON.stringify({
-      message: "Success"
-    })
   }
 
+  return new Promise((resolve, reject) => {
+    docClient.delete(param, (err, data) => {
+      if (err) {
+        logger.info('err', { err })
+        reject({
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      }
+      logger.info('data', { data })
+      resolve({
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          message: "todo deleted"
+        })
+      })
+    })
+  })
 }

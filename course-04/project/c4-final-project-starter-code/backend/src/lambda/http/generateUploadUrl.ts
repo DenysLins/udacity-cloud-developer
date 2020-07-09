@@ -36,7 +36,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   const items = result.Items
 
-
   if (items) {
 
     const presignedUrl = s3.getSignedUrl('putObject', {
@@ -45,39 +44,53 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       Expires: signedUrlExpiration
     })
 
-    const item = await docClient.update({
+    const param = {
       TableName: todoTable,
       Key: {
-        todoId
+        "todoId": todoId,
+        "userId": userId
       },
-      UpdateExpression: "set todo.attachmentUrl = :a",
+      UpdateExpression: "set attachmentUrl = :a",
       ExpressionAttributeValues: {
         ":a": `https://${imageBucketName}.s3.amazonaws.com/${todoId}`
-      },
-      ReturnValues: "UPDATED_NEW"
-    }).promise()
-
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-origin': '*'
-      },
-      body: JSON.stringify({
-        "uploadUrl": presignedUrl,
-        "item": item
-      })
+      }
     }
+
+    return new Promise((resolve, reject) => {
+      docClient.update(param, (err, data) => {
+        if (err) {
+          logger.info('err', { err })
+          reject({
+            statusCode: 400,
+            headers: {
+              'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+              message: err
+            })
+          })
+        }
+        logger.info('data', { data })
+        resolve({
+          statusCode: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          body: JSON.stringify({
+            "uploadUrl": presignedUrl,
+          })
+        })
+      })
+    })
   } else {
     return {
       statusCode: 400,
       headers: {
-        'Access-Control-Allow-origin': '*'
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({
-        "message": "Todo not found"
+        "message": "todo not found"
       })
     }
-
   }
-
 }

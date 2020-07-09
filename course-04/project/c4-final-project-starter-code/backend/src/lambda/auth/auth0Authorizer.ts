@@ -68,17 +68,21 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const signingKey = signingKeys.find(key => key.kid === jwt.header.kid)
   return new Promise((resolve, reject) => {
     verify(token, signingKey.publicKey, (err, decoded) => {
-      if (err) throw new Error("token not verified")
+      if (err) {
+        reject(err)
+      }
       resolve({
-        iss: jwt.payload.iss,
-        sub: jwt.payload.sub,
-        iat: jwt.payload.iat,
-        exp: jwt.payload.exp,
+        iss: decoded.iss,
+        sub: decoded.sub,
+        iat: decoded.iat,
+        exp: decoded.exp,
       })
     })
   })
 
 }
+
+
 
 function getToken(authHeader: string): string {
   if (!authHeader) throw new Error('No authentication header')

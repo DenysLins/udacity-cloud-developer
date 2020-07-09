@@ -31,19 +31,36 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     attachmentUrl: '',
   }
 
-  await docClient.put({
+  const param = {
     TableName: todoTable,
     Item: newTodo
-  }).promise()
-
-  return {
-    statusCode: 201,
-    headers: {
-      'Access-Control-Allow-origin': '*'
-    },
-    body: JSON.stringify({
-      newTodo
-    })
   }
+
+  return new Promise((resolve, reject) => {
+    docClient.put(param, (err, data) => {
+      if (err) {
+        logger.info('err', { err })
+        reject({
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          body: JSON.stringify({
+            message: err
+          })
+        })
+      }
+      logger.info('data', { data })
+      resolve({
+        statusCode: 201,
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          item: newTodo
+        })
+      })
+    })
+  })
 
 }
