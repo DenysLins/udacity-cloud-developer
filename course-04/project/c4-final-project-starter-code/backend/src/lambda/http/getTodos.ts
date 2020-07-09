@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import 'source-map-support/register'
-import * as AWS from 'aws-sdk'
+import * as originalAws from 'aws-sdk'
+import AWSXRay from 'aws-xray-sdk-core';
+const AWS = AWSXRay.captureAWS(originalAws);
 
 import { createLogger } from '../../utils/logger'
 import * as utils from '../utils'
@@ -12,7 +14,7 @@ const todoIdIndex = process.env.INDEX_NAME
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-  logger.info('getTodos', {
+  logger.info('getTodo', {
     event
   })
 
@@ -21,14 +23,14 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const param = {
     TableName: todoTable,
     IndexName: todoIdIndex,
-    FilterExpression: 'userId = :userId',
+    KeyConditionExpression: 'userId = :userId',
     ExpressionAttributeValues: {
       ':userId': userId
     }
   }
 
   return new Promise((resolve, reject) => {
-    docClient.scan(param, (err, data) => {
+    docClient.query(param, (err, data) => {
       if (err) {
         logger.info('err', { err })
         reject({

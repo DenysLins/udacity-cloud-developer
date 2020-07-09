@@ -1,7 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
-import * as AWS from 'aws-sdk'
 import uuid from 'uuid'
+import * as originalAws from 'aws-sdk'
+import AWSXRay from 'aws-xray-sdk-core';
+const AWS = AWSXRay.captureAWS(originalAws);
 
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { createLogger } from '../../utils/logger'

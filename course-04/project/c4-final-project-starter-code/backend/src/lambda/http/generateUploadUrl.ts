@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import 'source-map-support/register'
-import * as AWS from 'aws-sdk'
+import * as originalAws from 'aws-sdk'
+import AWSXRay from 'aws-xray-sdk-core';
+const AWS = AWSXRay.captureAWS(originalAws);
 
 import { createLogger } from '../../utils/logger'
 import * as utils from '../utils'
@@ -29,8 +31,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     IndexName: todoIdIndex,
     KeyConditionExpression: 'todoId = :todoId AND userId = :userId',
     ExpressionAttributeValues: {
-      ':todoId': todoId,
       ':userId': userId,
+      ':todoId': todoId
     }
   }).promise()
 
@@ -47,8 +49,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const param = {
       TableName: todoTable,
       Key: {
-        "todoId": todoId,
-        "userId": userId
+        "userId": userId,
+        "todoId": todoId
       },
       UpdateExpression: "set attachmentUrl = :a",
       ExpressionAttributeValues: {
