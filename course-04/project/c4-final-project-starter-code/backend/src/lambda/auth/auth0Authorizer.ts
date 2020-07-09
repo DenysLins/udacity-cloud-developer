@@ -14,8 +14,11 @@ const jwksUrl = 'https://denyslins.us.auth0.com/.well-known/jwks.json'
 export const handler = async (
   event: CustomAuthorizerEvent
 ): Promise<CustomAuthorizerResult> => {
+
   logger.info('Authorizing a user', event.authorizationToken)
+
   try {
+
     const jwtToken = await verifyToken(event.authorizationToken)
 
     logger.info('User was authorized', jwtToken)
@@ -34,6 +37,7 @@ export const handler = async (
       }
     }
   } catch (e) {
+
     logger.error('User not authorized', { error: e.message })
 
     return {
@@ -56,7 +60,9 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 
   const token = getToken(authHeader)
   const jwt: Jwt = decode(token, { complete: true }) as Jwt
+
   const res = await Axios.get(jwksUrl)
+
   const jwks = res.data.keys
   const signingKeys = jwks.filter(key => key.use === 'sig'
     && key.kty === 'RSA'
@@ -66,9 +72,11 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
     return { kid: key.kid, nbf: key.nbf, publicKey: certToPEM(key.x5c[0]) }
   })
   const signingKey = signingKeys.find(key => key.kid === jwt.header.kid)
+
   return new Promise((resolve, reject) => {
     verify(token, signingKey.publicKey, (err, decoded) => {
       if (err) {
+        logger.error('verify error', err)
         reject(err)
       }
       resolve({
@@ -81,8 +89,6 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   })
 
 }
-
-
 
 function getToken(authHeader: string): string {
   if (!authHeader) throw new Error('No authentication header')
