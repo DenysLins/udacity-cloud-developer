@@ -31,7 +31,6 @@ functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  # TODO: Configure this function
   GetTodos:
     handler: src/lambda/http/getTodos.handler
     events:
@@ -40,7 +39,6 @@ functions:
           path: todos
           cors: true
 
-  # TODO: Configure this function
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
     events:
@@ -52,7 +50,6 @@ functions:
             schema:
               application/json: ${file(src/models/create-todo-request.json)}
 
-  # TODO: Configure this function
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
     events:
@@ -64,7 +61,6 @@ functions:
             schema:
               application/json: ${file(src/models/update-todo-request.json)}
 
-  # TODO: Configure this function
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
     events:
@@ -73,7 +69,6 @@ functions:
           path: todos/{todoId}
           cors: true
 
-  # TODO: Configure this function
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
@@ -83,9 +78,7 @@ functions:
 
 resources:
   Resources:
-    # TODO: Add any necessary AWS resources
-
-    TodosDynamoDBTable:
+    TodoDynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
@@ -139,8 +132,7 @@ resources:
           Statement:
             - Sid: PublicReadForGetBucketObjects
               Effect: Allow
-              Principal: '*'
-              Action: 's3:GetObject'
-              Resource: 'arn:aws:s3:::${self:provider.environment.IMAGE_BUCKET_NAME}/*'
+              Principal: "*"
+              Action: "s3:GetObject"
+              Resource: "arn:aws:s3:::${self:provider.environment.IMAGE_BUCKET_NAME}/*"
         Bucket: !Ref AttachmentsBucket
-
