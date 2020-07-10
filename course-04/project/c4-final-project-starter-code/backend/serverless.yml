@@ -341,7 +341,7 @@ resources:
         RestApiId:
           Ref: "ApiGatewayRestApi"
 
-    TodoDynamoDBTable:
+    TodosDynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
