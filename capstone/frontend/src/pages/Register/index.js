@@ -7,7 +7,7 @@ import logoImg from '../../assets/logo.svg'
 import api from '../../services/api'
 import './style.css'
 
-function Register () {
+function Register() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
@@ -16,7 +16,7 @@ function Register () {
 
   const history = useHistory()
 
-  async function handleRegister (e) {
+  async function handleRegister(e) {
     e.preventDefault()
     const data = {
       name,
@@ -41,20 +41,19 @@ function Register () {
       <div className="content">
         <section>
           <img src={logoImg} alt="Be the Hero" />
-          <h1>Cadastro</h1>
+          <h1>Sign up</h1>
           <p>
-            Faça seu cadastro, entre na plataforma e ajude pessoas a encontrar
-            os casos de sua ONG.
+            First Sign up, then enter the platform and help people to find cases for your Non-Governmental Organization.
           </p>
           <Link className="back-link" to="/">
             <FiArrowLeft size={16} color="#E02041" />
-            Voltar para o logon
+            Back to Login
           </Link>
         </section>
 
         <form onSubmit={handleRegister}>
           <input
-            placeholder="Nome da ONG"
+            placeholder="NGO name"
             value={name}
             onChange={e => setName(e.target.value)}
           />
@@ -71,19 +70,19 @@ function Register () {
           />
           <div className="input-group">
             <input
-              placeholder="Cidade"
+              placeholder="City"
               value={city}
               onChange={e => setCity(e.target.value)}
             />
             <input
-              placeholder="UF"
-              style={{ width: 80 }}
+              placeholder="State"
+              style={{ width: 100 }}
               value={uf}
               onChange={e => setUf(e.target.value)}
             />
           </div>
           <button className="button" type="submit">
-            Cadastrar
+            Sign up
           </button>
         </form>
       </div>

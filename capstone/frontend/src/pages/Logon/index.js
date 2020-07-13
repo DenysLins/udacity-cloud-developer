@@ -7,12 +7,12 @@ import './style.css'
 import heroesImg from '../../assets/heroes.png'
 import logoImg from '../../assets/logo.svg'
 
-function Logon () {
+function Logon() {
   const [id, setId] = useState('')
 
   const history = useHistory()
 
-  async function handleLogon (e) {
+  async function handleLogon(e) {
     e.preventDefault()
     try {
       const response = await api.post('session', { id })
@@ -21,7 +21,7 @@ function Logon () {
       history.push('/profile')
     } catch (error) {
       console.log(error)
-      alert('Error while doing the logon. Try again.')
+      alert('Error while doing the login. Try again.')
     }
   }
 
@@ -37,7 +37,7 @@ function Logon () {
           <button className="button" type="submit">Login</button>
           <Link className="back-link" to="/register">
             <FiLogIn size={16} color="#E02041" />
-            I don't have ID
+            Sign up
           </Link>
         </form>
       </section>
