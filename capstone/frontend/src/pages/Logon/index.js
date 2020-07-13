@@ -21,7 +21,7 @@ function Logon () {
       history.push('/profile')
     } catch (error) {
       console.log(error)
-      alert('Erro ao efetuar logon. Tente novamente.')
+      alert('Error while doing the logon. Try again.')
     }
   }
 
@@ -30,14 +30,14 @@ function Logon () {
       <section className="form">
         <img src={logoImg} alt="Be the Hero" />
         <form onSubmit={handleLogon}>
-          <h1>Faça seu logon</h1>
-          <input placeholder="Sua ID"
+          <h1>Please login</h1>
+          <input placeholder="Your ID"
             value={id}
             onChange={e => setId(e.target.value)} />
-          <button className="button" type="submit">Entrar</button>
+          <button className="button" type="submit">Login</button>
           <Link className="back-link" to="/register">
             <FiLogIn size={16} color="#E02041" />
-            Não tenho cadastro
+            I don't have ID
           </Link>
         </form>
       </section>
