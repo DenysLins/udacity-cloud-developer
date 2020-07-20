@@ -65,17 +65,11 @@ app.post('/values', async (req, res) => {
     return res.status(422).send('Index too high')
   }
 
-  console.log("index")
-  console.log(index)
-
   redisClient.get(index, (err, reply) => {
 
     if (err) {
       console.log(err)
     }
-
-    console.log("reply")
-    console.log(reply)
 
     if (!reply) {
 
@@ -83,17 +77,8 @@ app.post('/values', async (req, res) => {
         index: index
       };
 
-      console.log("data")
-      console.log(data)
-
-      console.log(`url`)
-      console.log(`http://${keys.workerHost}:${keys.workerPort}/`)
-
       axios.post(`http://${keys.workerHost}:${keys.workerPort}/`, data)
-        .then((res) => {
-          console.log(`Status: ${res.status}`)
-          console.log('Body: ', res.data)
-        }).catch((err) => {
+        .catch((err) => {
           console.error(err)
         })
     }
