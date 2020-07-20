@@ -44,17 +44,20 @@ app.get('/', (req, res) => {
 
 app.get('/values/all', async (req, res) => {
   const values = await pgClient.query('SELECT * FROM used_values')
+  console.log(values.rows)
   res.send(values.rows)
 })
 
 app.get('/values/current', async (req, res) => {
   redisClient.hgetall('values', (err, values) => {
+    console.log(values)
     res.send(values)
   })
 })
 
 app.post('/values', async (req, res) => {
 
+  console.log(req.body)
   const index = req.body.index
 
   if (!index) {
