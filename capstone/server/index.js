@@ -60,12 +60,12 @@ app.post('/values', async (req, res) => {
     return res.status(422).send('Index too high')
   }
 
-  console.log("redisClient.hget('values', index)")
-  console.log(redisClient.hget('values', index))
+  console.log("redisClient.get(index)")
+  console.log(redisClient.get(index))
   console.log("index")
   console.log(index)
 
-  if (!redisClient.hget('values', index)) {
+  if (!redisClient.get(index)) {
     body = {
       index: index
     }
