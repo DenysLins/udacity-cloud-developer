@@ -90,6 +90,4 @@ app.post('/values', async (req, res) => {
 
 })
 
-app.listen(5000, err => {
-  console.log(err)
-})
+app.listen(5000, () => console.log('Server listening no port 5000'))

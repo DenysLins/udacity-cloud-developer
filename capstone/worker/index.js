@@ -26,8 +26,4 @@ app.post('/', (req, res) => {
 
 })
 
-app.listen(5001, err => {
-  console.log(err)
-})
-
-
+app.listen(5001, () => console.log('Worker listening no port 5001'))
