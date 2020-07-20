@@ -78,10 +78,9 @@ app.post('/values', async (req, res) => {
     console.log(reply)
 
     if (!reply) {
-      body = {
+      axios.post(`http://${keys.workerHost}:${keys.workerPort}/`, {
         index: index
-      }
-      axios.post(`http://${keys.workerHost}:${keys.workerPort}`, body)
+      })
     }
 
   })
