@@ -68,7 +68,7 @@ app.post('/values', async (req, res) => {
       index: index
     }
 
-    axios.post(`http://${keys.workerHost}:${keys.workerPort}', body)
+    axios.post(`http://${keys.workerHost}:${keys.workerPort}`, body)
 
     pgClient.query('INSERT INTO used_values(number) VALUES($1) ON CONFLICT (number) DO NOTHING;', [index])
     res.send({ working: true })
