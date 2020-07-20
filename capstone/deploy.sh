@@ -1,5 +1,8 @@
 echo 'Initializing deploy'
 
+export GIT_SHA=$(git rev-parse --short HEAD)
+echo $GIT_SHA
+
 echo 'Building client'
 docker build -t denyslins/udacity-react-multi-client:$GIT_SHA -f ./client/Dockerfile.dev ./client
 
