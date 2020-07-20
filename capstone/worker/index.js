@@ -18,7 +18,7 @@ function fib(index) {
 app.post('/', (req, res) => {
 
   console.log(req.body)
-  index = req.body.index
+  const index = req.body.index
   redisClient.hset('values', index, 'Calculating...')
   redisClient.hset('values', index, fib(parseInt(index)))
 

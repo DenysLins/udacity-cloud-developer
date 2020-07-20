@@ -78,9 +78,24 @@ app.post('/values', async (req, res) => {
     console.log(reply)
 
     if (!reply) {
-      axios.post(`http://${keys.workerHost}:${keys.workerPort}/`, {
+
+      const data = {
         index: index
-      })
+      };
+
+      console.log("data")
+      console.log(data)
+
+      console.log(`url`)
+      console.log(`http://${keys.workerHost}:${keys.workerPort}/`)
+
+      axios.post(`http://${keys.workerHost}:${keys.workerPort}/`, data)
+        .then((res) => {
+          console.log(`Status: ${res.status}`)
+          console.log('Body: ', res.data)
+        }).catch((err) => {
+          console.error(err)
+        })
     }
 
   })
