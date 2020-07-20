@@ -54,7 +54,12 @@ app.get('/values/current', async (req, res) => {
 })
 
 app.post('/values', async (req, res) => {
+
   const index = req.body.index
+
+  if (!index) {
+    return res.status(400).send('Index invalid')
+  }
 
   if (parseInt(index) > 50) {
     return res.status(422).send('Index too high')
@@ -78,10 +83,12 @@ app.post('/values', async (req, res) => {
       }
       axios.post(`http://${keys.workerHost}:${keys.workerPort}`, body)
     }
+
   })
 
   pgClient.query('INSERT INTO used_values(number) VALUES($1) ON CONFLICT (number) DO NOTHING;', [index])
   res.send({ working: true })
+
 })
 
 app.listen(5000, err => {
