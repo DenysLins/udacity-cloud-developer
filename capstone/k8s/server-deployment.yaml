@@ -14,11 +14,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: denyslins/udemy-react-multi-server:latest
-          # resources:
-          #   limits:
-          #     memory: "256Mi"
-          #     cpu: "1000m"
+          image: denyslins/udacity-react-multi-server:latest
           ports:
             - containerPort: 5000
           env:

@@ -5,14 +5,14 @@ services:
 
 env:
   global:
-    - GIT_SHA=$(git rev-parse HEAD)
+    - GIT_SHA=$(git rev-parse --short HEAD)
 
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t denyslins/udemy-react-multi-client -f ./capstone/client/Dockerfile.dev ./capstone/client
+  - docker build -t denyslins/udacity-react-multi-client -f ./capstone/client/Dockerfile.dev ./capstone/client
 
 script:
-  - docker run -e CI=true denyslins/udemy-react-multi-client npm run test -- --coverage
+  - docker run -e CI=true denyslins/udacity-react-multi-client npm run test -- --coverage
 
 deploy:
   provider: script

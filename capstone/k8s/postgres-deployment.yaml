@@ -19,10 +19,6 @@ spec:
       containers:
         - name: postgres
           image: postgres:latest
-          # resources:
-          #   limits:
-          #     memory: "256Mi"
-          #     cpu: "1000m"
           ports:
             - containerPort: 5432
           volumeMounts:
