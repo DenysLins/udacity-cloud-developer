@@ -60,20 +60,20 @@ app.post('/values', async (req, res) => {
     return res.status(422).send('Index too high')
   }
 
+  console.log("redisClient.hget('values', index)")
   console.log(redisClient.hget('values', index))
+  console.log("index")
+  console.log(index)
 
   if (!redisClient.hget('values', index)) {
-
     body = {
       index: index
     }
-
     axios.post(`http://${keys.workerHost}:${keys.workerPort}`, body)
-
-    pgClient.query('INSERT INTO used_values(number) VALUES($1) ON CONFLICT (number) DO NOTHING;', [index])
-    res.send({ working: true })
-
   }
+
+  pgClient.query('INSERT INTO used_values(number) VALUES($1) ON CONFLICT (number) DO NOTHING;', [index])
+  res.send({ working: true })
 })
 
 app.listen(5000, err => {
