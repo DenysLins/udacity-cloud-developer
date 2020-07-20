@@ -5,6 +5,7 @@ const keys = require('./keys')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const axios = require('axios')
 
 const app = express()
 app.use(cors())
@@ -34,7 +35,7 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000
 })
 
-const redisPublisher = redisClient.duplicate()
+// const redisPublisher = redisClient.duplicate()
 
 // Express Route Handlers
 app.get('/', (req, res) => {
@@ -54,13 +55,25 @@ app.get('/values/current', async (req, res) => {
 
 app.post('/values', async (req, res) => {
   const index = req.body.index
+
   if (parseInt(index) > 50) {
     return res.status(422).send('Index too high')
   }
-  redisClient.hset('values', index, 'Nothing yet')
-  redisPublisher.publish('insert', index)
-  pgClient.query('INSERT INTO used_values(number) VALUES($1) ON CONFLICT (number) DO NOTHING;', [index])
-  res.send({ working: true })
+
+  console.log(redisClient.hget('values', index))
+
+  if (!redisClient.hget('values', index)) {
+
+    body = {
+      index: index
+    }
+
+    axios.post(`http://${keys.workerHost}:${keys.workerPort}', body)
+
+    pgClient.query('INSERT INTO used_values(number) VALUES($1) ON CONFLICT (number) DO NOTHING;', [index])
+    res.send({ working: true })
+
+  }
 })
 
 app.listen(5000, err => {

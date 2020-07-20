@@ -35,3 +35,7 @@ spec:
                 secretKeyRef:
                   name: pgpassword
                   key: POSTGRES_PASSWORD
+            - name: WORKER_HOST
+              value: worker-cluster-ip-service
+            - name: WORKER_PORT
+              value: "5001"
