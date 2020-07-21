@@ -4,13 +4,13 @@ export GIT_SHA=$(git rev-parse --short HEAD)
 echo $GIT_SHA
 
 echo 'Building client'
-docker build -t denyslins/udacity-react-multi-client:$GIT_SHA -f ./client/Dockerfile ./client
+docker build -t denyslins/udacity-react-multi-client:$GIT_SHA -f ./client/Dockerfile.dev ./client
 
 echo 'Building server'
-docker build -t denyslins/udacity-react-multi-server:$GIT_SHA -f ./server/Dockerfile ./server
+docker build -t denyslins/udacity-react-multi-server:$GIT_SHA -f ./server/Dockerfile.dev ./server
 
 echo 'Building worker'
-docker build -t denyslins/udacity-react-multi-worker:$GIT_SHA -f ./worker/Dockerfile ./worker
+docker build -t denyslins/udacity-react-multi-worker:$GIT_SHA -f ./worker/Dockerfile.dev ./worker
 
 echo 'Pushing client'
 docker push denyslins/udacity-react-multi-client:$GIT_SHA
