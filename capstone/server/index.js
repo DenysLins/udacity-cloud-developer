@@ -35,27 +35,20 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000
 })
 
-// const redisPublisher = redisClient.duplicate()
-
-// Express Route Handlers
-app.get('/', (req, res) => {
-  res.send('Hi')
-})
-
-app.get('/values/all', async (req, res) => {
+app.get('/api/values/all', async (req, res) => {
   const values = await pgClient.query('SELECT * FROM used_values')
   console.log(values.rows)
   res.send(values.rows)
 })
 
-app.get('/values/current', async (req, res) => {
+app.get('/api/values/current', async (req, res) => {
   redisClient.hgetall('values', (err, values) => {
     console.log(values)
     res.send(values)
   })
 })
 
-app.post('/values', async (req, res) => {
+app.post('/api/values', async (req, res) => {
 
   console.log(req.body)
   const index = req.body.index
